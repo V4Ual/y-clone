@@ -1,7 +1,8 @@
 import axios from "axios";
+import { config } from "../config/config";
 
 const api = axios.create({
-  baseURL: "http://localhost:3000/api",
+  baseURL: config.BASE_API,
 });
 
 api.interceptors.request.use(
@@ -22,7 +23,7 @@ api.interceptors.response.use(
   function (error) {
     if (error.response.status === 400) {
       console.log("ERROR:", error.message);
-    } else if (error.response.status === 401) {
+    } else if (error.response.status === 403) {
       console.log("ERROR:", error.message);
     } else if (error.response.status === 409) {
       console.log("ERROR:", error.message);
@@ -34,4 +35,4 @@ api.interceptors.response.use(
   }
 );
 
-export default api;
+export { api };

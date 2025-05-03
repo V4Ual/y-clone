@@ -25,12 +25,12 @@ export const onChangeLoginValidation = (name, value) => {
 };
 
 export const onSubmtiValidation = (authObject) => {
-  const { email, password } = authObject;
+  const { email = null, password = null } = authObject;
   let error = {};
 
   if (!email) {
     error.email = "Email is required";
-  } else if (emailRegex.test(email)) {
+  } else if (!emailRegex.test(email)) {
     error.email = "Email is required";
   }
 

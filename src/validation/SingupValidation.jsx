@@ -3,7 +3,6 @@ import { emailRegex } from "../regex";
 export const onChangeSignupValidation = (name, value, password) => {
   const error = {};
 
-  console.log(value, password);
   switch (name) {
     case "email":
       if (!value) {

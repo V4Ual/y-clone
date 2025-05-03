@@ -10,6 +10,9 @@ export default defineConfig({
       "@hooks": path.resolve(__dirname, "./src/hooks"),
       "@utils": path.resolve(__dirname, "./src/utils"),
       "@components": path.resolve(__dirname, "./src/components"),
+      "@config": path.resolve(__dirname, "./src/config"),
+      "@axiosApi": path.resolve(__dirname, "./src/axiosApi"),
+      "@services": path.resolve(__dirname, "./src/services"),
     },
   },
 });

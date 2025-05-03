@@ -38,19 +38,20 @@ export const onChangeHandleInputChannel = (name, value, file) => {
   return error;
 };
 
-export const onSubmitChannel = (channelData) => {
+export const onSubmitChannel = (channelData, file) => {
   const { avatar, channelName, description } = channelData;
+  console.log({ channelData });
 
   const error = {};
   if (!avatar) {
     error.avatar = "No file selected.";
   } else {
     const allowedTypes = ["image/jpeg", "image/png", "image/webp"];
-    const maxSize = 2 * 1024 * 1024;
+    const maxSize = 2 * 1024;
 
-    if (!allowedTypes.includes(value.type)) {
+    if (!allowedTypes.includes(avatar.type)) {
       error.avatar = "Only JPG, PNG, or WEBP images are allowed.";
-    } else if (value.size > maxSize) {
+    } else if (avatar.size > maxSize) {
       error.avatar = "File size should be less than 2MB.";
     } else {
       delete error.avatar;

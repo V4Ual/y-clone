@@ -3,7 +3,10 @@
     "paths": {
       "@hooks/*": ["./src/hooks/*"],
       "@utils/*": ["./src/utils/*"],
-      "@components/*": ["./src/components/*"]
+      "@components/*": ["./src/components/*"],
+      "@config/*": ["./src/config/*"],
+      "@axiosApi/*": ["./src/axiosApi/*"],
+      "@services/*": ["./src/services/*"]
     }
   }
 }
