@@ -1,13 +1,14 @@
 import React, { useState } from "react";
 import { Video, AlertCircle, Upload } from "lucide-react";
 import { useCreateChange } from "@hooks/index";
-const CreateChannelPage = () => {
+ 
+export const CreateChannelPage = () => {
   const {
     createChangeData,
     avatar,
     handleChangeInputChannel,
     errorMessage,
-    handleOnSubmitChennal,
+    handleOnSubmitChannel,
     isLoading,
   } = useCreateChange();
 
@@ -108,7 +109,7 @@ const CreateChannelPage = () => {
                 ? "bg-blue-400 cursor-not-allowed"
                 : "bg-blue-600 hover:bg-blue-700"
             }`}
-            onClick={() => handleOnSubmitChennal()}
+            onClick={() => handleOnSubmitChannel()}
           >
             {isLoading ? "Creating channel..." : "Create channel"}
           </button>
@@ -118,4 +119,3 @@ const CreateChannelPage = () => {
   );
 };
 
-export default CreateChannelPage;
