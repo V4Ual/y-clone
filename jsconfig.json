@@ -6,7 +6,8 @@
       "@components/*": ["./src/components/*"],
       "@config/*": ["./src/config/*"],
       "@axiosApi/*": ["./src/axiosApi/*"],
-      "@services/*": ["./src/services/*"]
+      "@services/*": ["./src/services/*"],
+      "@pages/*": ["./src/pages/*"],
     }
   }
 }

@@ -13,6 +13,7 @@ export default defineConfig({
       "@config": path.resolve(__dirname, "./src/config"),
       "@axiosApi": path.resolve(__dirname, "./src/axiosApi"),
       "@services": path.resolve(__dirname, "./src/services"),
+      "@pages": path.resolve(__dirname, "./src/pages"),
     },
   },
 });

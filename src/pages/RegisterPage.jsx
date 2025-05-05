@@ -3,7 +3,7 @@ import { Video, AlertCircle, Upload } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useRegistrationHook } from "@hooks/auth/Register.hook";
 
-const RegisterPage = () => {
+export const RegisterPage = () => {
   const {
     errorMessage,
     handleChangeInput,
@@ -116,4 +116,3 @@ const RegisterPage = () => {
   );
 };
 
-export default RegisterPage;

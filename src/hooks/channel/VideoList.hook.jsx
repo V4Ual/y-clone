@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 export const useVideoList = () => {
   const [videoHistory, setVideoHistory] = useState([
@@ -36,8 +38,20 @@ export const useVideoList = () => {
       views: 0,
     },
   ]);
+  const navigation = useNavigate();
+
+  const userDetails = useSelector((state) => state.user);
+
+  const createChannel = () => {
+    if (userDetails.is_channel) {
+      navigation("/channel-details");
+    } else {
+      navigation("/channel");
+    }
+  };
 
   return {
     videoHistory,
+    createChannel,
   };
 };

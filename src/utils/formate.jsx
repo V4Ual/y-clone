@@ -1,3 +1,5 @@
+import moment from "moment";
+
 export const formatViews = (views) => {
   if (views >= 1000000) {
     return `${(views / 1000000).toFixed(1)}M views`;
@@ -14,4 +16,8 @@ export const formatSubscribers = (subscribers) => {
     return `${(subscribers / 1000).toFixed(1)}K`;
   }
   return subscribers.toString();
+};
+
+export const formatTime = (time) => {
+  return moment(time).format("DD-MM-YYYY");
 };

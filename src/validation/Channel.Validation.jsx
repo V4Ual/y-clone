@@ -47,7 +47,7 @@ export const onSubmitChannel = (channelData, file) => {
     error.avatar = "No file selected.";
   } else {
     const allowedTypes = ["image/jpeg", "image/png", "image/webp"];
-    const maxSize = 2 * 1024;
+    const maxSize = 2 * 1024 * 1024;
 
     if (!allowedTypes.includes(avatar.type)) {
       error.avatar = "Only JPG, PNG, or WEBP images are allowed.";
