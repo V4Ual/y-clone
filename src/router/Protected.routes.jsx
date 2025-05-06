@@ -3,6 +3,8 @@ import { Navigate, Outlet } from "react-router-dom";
 
 const ProtectRoute = ({ isPrivate = false, children }) => {
   const token = localStorage.getItem("access_token");
+  
+  console.log(isPrivate,!token)
 
   if (isPrivate && !token) {
     return <Navigate to="/login" replace />;

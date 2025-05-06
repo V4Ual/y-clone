@@ -8,27 +8,19 @@ import {
   VideoUpload,
 } from "@pages/index";
 import ProtectedRoute from "./Protected.routes";
+import VideoViewPage from "@pages/VideoViewPage";
+import MainLayout from "../layout/MainLayout";
+import VideoPlayer from "@components/VideoPlayer/VideoPlayer";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Navigate to="/login" replace />,
-  },
-  {
-    path: "/login",
-    element: (
-      <ProtectedRoute isPrivate={false}>
-        <LoginPage />
-      </ProtectedRoute>
-    ),
-  },
-  {
-    path: "/register",
-    element: (
-      <ProtectedRoute isPrivate={false}>
-        <RegisterPage />
-      </ProtectedRoute>
-    ),
+    element: <ProtectedRoute isPrivate={false} />,
+    children: [
+      { index: true, element: <Navigate to="/login" replace /> },
+      { path: "login", element: <LoginPage /> },
+      { path: "register", element: <RegisterPage /> },
+    ],
   },
   {
     path: "/",
@@ -38,6 +30,15 @@ const router = createBrowserRouter([
       { path: "upload", element: <VideoUpload /> },
       { path: "channel", element: <CreateChannelPage /> },
       { path: "channel-details", element: <ChannelPage /> },
+      { path: "channel-123", element: <VideoPlayer /> },
+      {
+        path: "watch",
+        element: (
+          <MainLayout>
+            <VideoViewPage />
+          </MainLayout>
+        ),
+      },
     ],
   },
 ]);

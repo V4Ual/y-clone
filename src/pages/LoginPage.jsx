@@ -31,7 +31,7 @@ export const LoginPage = () => {
                 type="email"
                 required
                 name="email"
-                value={authData?.password || ""}
+                value={authData?.email || ""}
                 className="mt-1 block w-full bg-[#1f1f1f] border border-gray-700 rounded-md shadow-sm py-2 px-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                 onChange={(e) => handleChange(e)}
               />
