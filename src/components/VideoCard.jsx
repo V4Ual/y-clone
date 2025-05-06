@@ -1,10 +1,13 @@
-import { formatViews } from "@utils/formate";
+import { formatSubscribers, formatViews } from "@utils/formate";
 import React from "react";
 import { Link } from "react-router-dom";
 
-const VideoCard = ({ video }) => {
+const VideoCard = ({ video, userDetails, playVideo }) => {
   return (
-    <div className="group cursor-pointer transition-transform duration-300 hover:-translate-y-1">
+    <div
+      onClick={() => playVideo(video.video_id)}
+      className="group cursor-pointer transition-transform duration-300 hover:-translate-y-1"
+    >
       <div className="relative rounded-xl overflow-hidden mb-2">
         <img
           src={video.thumbnail}
@@ -21,8 +24,8 @@ const VideoCard = ({ video }) => {
           <Link to={`/channel/${video.id}`}>
             <div className="w-9 h-9 rounded-full overflow-hidden ring-2 ring-transparent hover:ring-red-500 transition-all duration-300">
               <img
-                src={video.channelAvatar}
-                alt={video.channelName}
+                src={userDetails.channel_image}
+                alt={video.channel_name}
                 className="w-full h-full object-cover"
               />
             </div>
@@ -43,7 +46,9 @@ const VideoCard = ({ video }) => {
             </Link>
             <div className="flex items-center">
               <span>{formatViews(video.views)}</span>
-              <span className="mx-1">•</span>
+              <span className="mx-1">
+                {formatSubscribers(video.subscriber)}
+              </span>
               <span>{video.uploadedAt}</span>
             </div>
           </div>

@@ -1,0 +1,161 @@
+body {
+  font-family: "Roboto", sans-serif;
+  margin: 0;
+  background-color: #181818;
+  color: white;
+}
+
+
+
+/* Container */
+.container {
+  display: flex;
+  justify-content: center;
+  padding: 40px 20px;
+  border-radius: 20px;
+}
+
+/* --- Video.js YouTube Style Overrides --- */
+.video-js {
+  max-width: 960px;
+  border-radius: 4px;
+  overflow: hidden;
+  background-color: #000;
+}
+
+.video-js .vjs-control-bar {
+  background: transparent;
+  font-size: 14px;
+  color: #fff;
+}
+
+.video-js .vjs-big-play-button {
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  border-radius: 50%;
+  width: 64px;
+  height: 64px;
+  line-height: 64px;
+  font-size: 28px;
+  color: red;
+  transition: background 0.3s;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.video-js .vjs-big-play-button:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.video-js .vjs-play-progress,
+.video-js .vjs-slider-bar {
+  background: #ff0000;
+}
+
+.video-js .vjs-volume-level {
+  background: #ff0000;
+}
+
+.vjs-control:before {
+  color: white !important;
+}
+
+/* --- Quality Selector Styles --- */
+.contentMenu {
+  position: relative;
+  display: inline-block;
+  bottom: -3px;
+}
+
+.contentMenu .icon {
+  width: 32px;
+  height: 32px;
+  text-align: center;
+  line-height: 32px;
+  font-size: 20px;
+  cursor: pointer;
+  color: white;
+}
+
+.contentMenu .menu {
+  position: absolute;
+  bottom: 36px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #222;
+  border-radius: 5px;
+  border: 1px solid #444;
+  display: none;
+  flex-direction: column-reverse;
+  min-width: 100px;
+  z-index: 10;
+}
+
+.contentMenu:hover .menu {
+  display: flex;
+}
+
+.contentMenu .menu:after {
+  content: "";
+  position: absolute;
+  width: 0;
+  height: 0;
+  bottom: -10px;
+  left: calc(50% - 10px);
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-top: 10px solid #222;
+}
+
+.item {
+  padding: 10px;
+  text-align: center;
+  background-color: #222;
+  color: #fff;
+  cursor: pointer;
+  position: relative;
+}
+
+.item:hover {
+  background-color: #333;
+}
+
+.item.selected {
+  background-color: #444;
+  color: #ff0000;
+  font-weight: bold;
+}
+
+.item.selected:before {
+  content: "";
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: #ff0000;
+  border-radius: 50%;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+#auto .current {
+  font-size: 10px;
+  margin-left: 3px;
+}
+
+#auto .current:before {
+  content: "(";
+  margin-right: 1px;
+}
+
+#auto .current:after {
+  content: ")";
+  margin-left: 1px;
+}
+
+/* Make the cog icon white */
+.vjs-icon-cog:before {
+  color: white !important;
+  bottom: 10px !important;
+}
