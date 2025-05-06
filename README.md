@@ -27,7 +27,7 @@ A minimal full-stack video-sharing platform inspired by YouTube. This project in
 
 1. Clone the repository:
    ```bash
-   [git clone https://github.com/your-username/youtube-clone.git](https://github.com/V4Ual/y-clone.git)
+   https://github.com/V4Ual/y-clone.git
    cd y-clone
 
 
