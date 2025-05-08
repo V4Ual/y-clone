@@ -2,7 +2,7 @@ import "./App.css";
 import { RouterProvider } from "react-router";
 import router from "./router";
 import { ToastContainer } from "react-toastify";
-import { Provider } from "react-redux";
+import { Provider, useSelector } from "react-redux";
 import { Store } from "./store/store";
 
 function App() {
