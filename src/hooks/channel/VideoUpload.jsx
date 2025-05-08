@@ -1,4 +1,6 @@
+import { fetchVideoUpload } from "@services/index";
 import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
 export const useVideoUpload = () => {
   const [videoData, setVideoData] = useState({});
@@ -37,7 +39,20 @@ export const useVideoUpload = () => {
   };
 
   const handleSubmitVideo = () => {
-    console.log(videoData);
+    const formData = new FormData();
+    formData.append("video", videoData.video);
+    formData.append("thumbnail", videoData.image);
+    formData.append("title", videoData.title);
+    formData.append("description", videoData.description);
+
+    const response = fetchVideoUpload(formData);
+
+    if (response.status) {
+      toast.success(response.message);
+      setVideoData({});
+    } else {
+      toast.error(response.message);
+    }
   };
 
   return {

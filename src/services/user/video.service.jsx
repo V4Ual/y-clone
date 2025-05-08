@@ -17,3 +17,12 @@ export const fetchVideoDetails = async (videoId) => {
     return error.response.data;
   }
 };
+
+export const fetchVideoUpload = async (videoData) => {
+  try {
+    const response = await api.post(`/v1/user/video/create`, videoData);
+    return response.data;
+  } catch (error) {
+    return error.response.data;
+  }
+};

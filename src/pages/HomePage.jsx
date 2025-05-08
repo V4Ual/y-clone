@@ -5,6 +5,7 @@ import VideoGrid from "@components/VideoGrid";
 import EmptyState from "@components/EmptyState";
 import { useSelector } from "react-redux";
 import { useVideoList } from "@hooks/index";
+import { useWebSocket } from "@utils/Common.utils";
 
 export const HomePage = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -12,6 +13,7 @@ export const HomePage = () => {
   const [isInitialRender, setIsInitialRender] = useState(true);
 
   const { createChannel, videoHistory } = useVideoList();
+
 
   return (
     <div className="min-h-screen bg-gray-900">

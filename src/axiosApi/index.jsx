@@ -2,6 +2,7 @@ import axios from "axios";
 import { config } from "../config/config";
 import Cookies from "js-cookie";
 import { fetchRefreshToken } from "@services/index";
+import { Navigate } from "react-router-dom";
 
 axios.defaults.withCredentials = true;
 
@@ -26,6 +27,7 @@ api.interceptors.response.use(
     return response;
   },
   async function (error) {
+    // debugger
     const originalRequest = error.config;
 
     if (error.response?.status === 498 && !originalRequest._retry) {
@@ -49,6 +51,7 @@ api.interceptors.response.use(
       console.log("ERROR:", error.message);
     } else if (error.response.status === 401) {
       localStorage.removeItem("access_token");
+      Navigate('/login')
     } else if (error.response.status === 409) {
     } else if (error.response.status === 403) {
       console.log("ERROR:", error.message);

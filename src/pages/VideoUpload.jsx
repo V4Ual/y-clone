@@ -11,6 +11,8 @@ import {
   Eye,
 } from "lucide-react";
 import { useVideoList, useVideoUpload } from "@hooks/index";
+import { formatTime, formatViews } from "@utils/formate";
+import { useWebSocket } from "@utils/Common.utils";
 
 // Types
 
@@ -22,8 +24,16 @@ export const VideoUpload = () => {
   const [videoFile, setVideoFile] = useState(null);
   const [isUploading, setIsUploading] = useState(false);
   const [activeTab, setActiveTab] = useState("details");
+  const [processVideo, setProcessVideo] = useState();
 
-  const { videoHistory } = useVideoList();
+  useWebSocket((message) => {
+    console.log("Handling message in component:", message);
+    setProcessVideo(JSON.parse(message));
+  });
+
+  const {
+    channelVideos: { data },
+  } = useVideoList();
   const {
     videoData,
     hanldeDeleteThumbnail,
@@ -291,7 +301,7 @@ export const VideoUpload = () => {
             <div className="p-6">
               <h2 className="text-2xl font-bold mb-6">Your Videos</h2>
 
-              {videoHistory.length === 0 ? (
+              {data && data?.length === 0 ? (
                 <div className="text-center py-12">
                   <Video className="h-12 w-12 text-gray-500 mx-auto mb-3" />
                   <p className="text-gray-400">No videos uploaded yet</p>
@@ -311,6 +321,9 @@ export const VideoUpload = () => {
                           Date
                         </th>
                         <th className="px-6 py-3 text-xs font-medium text-gray-400 uppercase tracking-wider">
+                          process
+                        </th>
+                        <th className="px-6 py-3 text-xs font-medium text-gray-400 uppercase tracking-wider">
                           Views
                         </th>
                         <th className="px-6 py-3 text-xs font-medium text-gray-400 uppercase tracking-wider">
@@ -319,71 +332,85 @@ export const VideoUpload = () => {
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-700">
-                      {videoHistory.map((video) => (
-                        <tr key={video.id} className="hover:bg-[#2a2a2a]">
-                          <td className="px-6 py-4">
-                            <div className="flex items-center space-x-3">
-                              <div className="flex-shrink-0 h-16 w-28 relative">
-                                <img
-                                  src={video.thumbnail}
-                                  alt={video.title}
-                                  className="h-full w-full object-cover rounded"
-                                />
-                                <div className="absolute bottom-1 right-1 bg-black bg-opacity-70 text-xs px-1 rounded">
-                                  3:45
+                      {data &&
+                        data.map((video) => (
+                          <tr key={video.id} className="hover:bg-[#2a2a2a]">
+                            <td className="px-6 py-4">
+                              <div className="flex items-center space-x-3">
+                                <div className="flex-shrink-0 h-16 w-28 relative">
+                                  <img
+                                    src={video?.thumbnail}
+                                    alt={video.title}
+                                    className="h-full w-full object-cover rounded"
+                                  />
+                                  <div className="absolute bottom-1 right-1 bg-black bg-opacity-70 text-xs px-1 rounded">
+                                    {video?.duration}
+                                  </div>
+                                </div>
+                                <div>
+                                  <p className="font-medium text-white truncate max-w-xs">
+                                    {video.title}
+                                  </p>
+                                  <p className="text-xs text-gray-400 truncate max-w-xs">
+                                    {video.fileName}
+                                  </p>
                                 </div>
                               </div>
-                              <div>
-                                <p className="font-medium text-white truncate max-w-xs">
-                                  {video.title}
-                                </p>
-                                <p className="text-xs text-gray-400 truncate max-w-xs">
-                                  {video.fileName}
-                                </p>
+                            </td>
+                            <td className="px-6 py-4">
+                              {video.status === "Live" && (
+                                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                  <CheckCircle className="h-3 w-3 mr-1" />
+                                </span>
+                              )}
+                              {video.status === "Processing" && (
+                                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                                  <Clock className="h-3 w-3 mr-1" />
+                                  Processing
+                                </span>
+                              )}
+                              {video.status === "Failed" && (
+                                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                                  <AlertTriangle className="h-3 w-3 mr-1" />
+                                  Failed
+                                </span>
+                              )}
+                            </td>
+                            <td className="px-6 py-4 text-sm text-gray-300">
+                              {formatTime(video.createdAt)}
+                            </td>
+
+                            <td className="px-6 py-4 text-sm text-gray-300">
+                              <p>
+                                {" "}
+                                {processVideo?.videoId === video?.video_id &&
+                                processVideo?.process != "100"
+                                  ? processVideo?.process
+                                  : "done"}{" "}
+                              </p>
+                            </td>
+
+                            <td className="px-6 py-4 text-sm text-gray-300">
+                              {formatTime(video.createdAt)}
+                            </td>
+                            <td className="px-6 py-4 text-sm text-gray-300">
+                              {formatViews(video.views)}
+                            </td>
+                            <td className="px-6 py-4 text-sm font-medium">
+                              <div className="flex space-x-2">
+                                <button className="text-blue-400 hover:text-blue-300">
+                                  <Edit className="h-5 w-5" />
+                                </button>
+                                <button
+                                  className="text-red-400 hover:text-red-300"
+                                  onClick={() => handleDelete(video.id)}
+                                >
+                                  <Trash2 className="h-5 w-5" />
+                                </button>
                               </div>
-                            </div>
-                          </td>
-                          <td className="px-6 py-4">
-                            {video.status === "live" && (
-                              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                                <CheckCircle className="h-3 w-3 mr-1" />
-                                Live
-                              </span>
-                            )}
-                            {video.status === "processing" && (
-                              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
-                                <Clock className="h-3 w-3 mr-1" />
-                                Processing
-                              </span>
-                            )}
-                            {video.status === "failed" && (
-                              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
-                                <AlertTriangle className="h-3 w-3 mr-1" />
-                                Failed
-                              </span>
-                            )}
-                          </td>
-                          <td className="px-6 py-4 text-sm text-gray-300">
-                            {video.uploadDate.toLocaleDateString()}
-                          </td>
-                          <td className="px-6 py-4 text-sm text-gray-300">
-                            {video.views.toLocaleString()}
-                          </td>
-                          <td className="px-6 py-4 text-sm font-medium">
-                            <div className="flex space-x-2">
-                              <button className="text-blue-400 hover:text-blue-300">
-                                <Edit className="h-5 w-5" />
-                              </button>
-                              <button
-                                className="text-red-400 hover:text-red-300"
-                                onClick={() => handleDelete(video.id)}
-                              >
-                                <Trash2 className="h-5 w-5" />
-                              </button>
-                            </div>
-                          </td>
-                        </tr>
-                      ))}
+                            </td>
+                          </tr>
+                        ))}
                     </tbody>
                   </table>
                 </div>

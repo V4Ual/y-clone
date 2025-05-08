@@ -1,4 +1,4 @@
-import { formatSubscribers, formatViews } from "@utils/formate";
+import { formatSubscribers, formatViews, formatTime } from "@utils/formate";
 import React from "react";
 import { Link } from "react-router-dom";
 
@@ -44,11 +44,11 @@ const VideoCard = ({ video, userDetails, playVideo }) => {
             >
               {video.channelName}
             </Link>
+            <span>{userDetails.channel_name}</span>
+
             <div className="flex items-center">
               <span>{formatViews(video.views)}</span>
-              <span className="mx-1">
-                {formatSubscribers(video.subscriber)}
-              </span>
+              <span className="mx-1">{formatTime(video.createdAt)}</span>
               <span>{video.uploadedAt}</span>
             </div>
           </div>
