@@ -1,7 +1,9 @@
 import React from "react";
 import { Search, Menu, Mic, Video, Bell, User } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const Header = () => {
+
   return (
     <header className="fixed top-0 left-0 right-0 h-16 bg-[#0F0F0F] z-50 flex items-center justify-between px-4 border-b border-[#272727]">
       <div className="flex items-center">
@@ -11,7 +13,9 @@ const Header = () => {
         <div className="flex items-center">
           <div className="font-bold text-xl flex items-center">
             <Video className="w-8 h-8 text-red-600 mr-1" />
-            <span>YouTube</span>
+            <Link to={"/home"}>
+              <span>YouTube</span>
+            </Link>
           </div>
         </div>
       </div>
@@ -38,10 +42,10 @@ const Header = () => {
         </button>
         <button className="p-2 mx-1 rounded-full hover:bg-[#272727] transition-colors">
           <Bell className="w-6 h-6" />
-        </button>
+        </button> */}
         <button className="w-8 h-8 mx-2 rounded-full bg-purple-600 flex items-center justify-center">
           <User className="w-5 h-5" />
-        </button> */}
+        </button>
       </div>
     </header>
   );

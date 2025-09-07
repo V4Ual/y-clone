@@ -1,200 +1,116 @@
-import React, { useEffect, useRef } from "react";
-import "./VideoPlayer.css";
+import React, { useEffect, useRef, useState } from "react";
+
+// import 'videojs-contrib-quality-levels'
+import Player from "@components/ArtPlayer";
+import artplayerPluginHlsControl from "artplayer-plugin-hls-control";
+import Hls from "hls.js";
+import artplayerProxyCanvas from "artplayer-proxy-canvas";
 
 const VideoPlayer = ({ videoDetails }) => {
-  const videoRef = useRef(null);
   const playerRef = useRef(null);
 
-  console.log({ videoDetails });
-
   useEffect(() => {
-    const script = document.createElement("script");
-    script.src = "https://vjs.zencdn.net/7.2.3/video.js";
-
-    script.onload = () => {
-      const videojs = window.videojs;
-
-      // Ensure the video URL is set
-      if (!videoDetails?.url) {
-        console.warn("Video URL is missing");
-        return;
+    const timer = setTimeout(() => {
+      const art = playerRef.current;
+      if (art && videoDetails?.url) {
+        art.play();
       }
+    }, 100);
 
-      // Modify HLS request
-      videojs.Hls.xhr.beforeRequest = function (options) {
-        const newUri = options.uri.includes(".ts")
-          ? `${options.uri}?q=test`
-          : options.uri;
-        return { ...options, uri: newUri };
-      };
+    return () => clearTimeout(timer);
+  }, [videoDetails?.url]);
+  if (videoDetails) {
+    return (
+      <div>
+        <Player
+          getInstance={(art) => {
+            playerRef.current = art;
+          }}
+          option={{
+            container: ".artplayer-app",
+            url: videoDetails.url,
+            poster: videoDetails.url,
+            volume: 0.5,
+            autoplay: false,
+            autoSize: false,
+            screenshot: true,
+            setting: true,
+            loop: true,
+            flip: true,
+            pip: true,
+            playbackRate: true,
+            aspectRatio: true,
+            fullscreen: true,
+            fullscreenWeb: true,
+            miniProgressBar: true,
+            autoPlayback: true,
+            autoOrientation: true,
+            thumbnails: {
+              url: videoDetails.thumbnail,
+              number: 60,
+              column: 10,
+              scale: 0.85,
+            },
 
-      const player = videojs(videoRef.current, {
-        responsive: true,
-        fluid: true,
-        sources: [
-          {
-            src: videoDetails.url,
-            type: "application/x-mpegURL",
-          },
-        ],
-      });
+            proxy: artplayerProxyCanvas(),
+            // container: ".artplayer-app",
+            // setting: true,
+            // proxy: artplayerProxyCanvas(),
+            // url: "http://172.25.31.86:3000/public/videos/yFDxII7dB_k/master.m3u8",
+            plugins: [
+              artplayerPluginHlsControl({
+                quality: {
+                  // Show qualitys in control
+                  control: true,
+                  // Show qualitys in setting
+                  setting: true,
+                  // Get the quality name from level
+                  getName: (level) => level.height + "P",
+                  // I18n
+                  title: "Quality",
+                  auto: "Auto",
+                },
+                audio: {
+                  // Show audios in control
+                  control: true,
+                  // Show audios in setting
+                  setting: true,
+                  // Get the audio name from track
+                  getName: (track) => track.name,
+                  // I18n
+                  title: "Audio",
+                  auto: "Auto",
+                },
+              }),
+            ],
+            customType: {
+              m3u8: function playM3u8(video, url, art) {
+                if (Hls.isSupported()) {
+                  if (art.hls) art.hls.destroy();
+                  const hls = new Hls();
+                  hls.loadSource(url);
+                  hls.attachMedia(video);
+                  art.hls = hls;
+                  art.on("destroy", () => hls.destroy());
+                } else if (video.canPlayType("application/vnd.apple.mpegurl")) {
+                  video.src = url;
+                } else {
+                  art.notice.show = "Unsupported playback format: m3u8";
+                }
+              },
+            },
+          }}
+          style={{
+            width: "100%",
+            aspectRatio: "16 / 9", // Maintains a 16:9 ratio
+            maxHeight: "100vh", // Prevents overflow on small screens
+          }}
 
-      player.on("loadedmetadata", () => {
-        // Wait until metadata is loaded before manipulating the video
-        console.log("Metadata loaded");
-
-        // Ensure valid currentTime value before setting it
-        const initialTime = player.currentTime();
-        if (isFinite(initialTime)) {
-          player.currentTime(initialTime);
-        } else {
-          console.warn("Invalid currentTime on video load", initialTime);
-        }
-
-        // Ensure proper handling of qualities and button creation
-        let qualities = player
-          .tech({ IWillNotUseThisInPlugins: true })
-          .hls.representations();
-        console.log("Available qualities:", qualities);
-
-        createButtonsQualities({
-          class: "item",
-          qualities: qualities,
-          father: player.controlBar.el_,
-        });
-
-        // Attempt to play the video after everything is loaded
-        player.play().catch((err) => {
-          console.error("Error while playing video:", err);
-        });
-      });
-
-      const audioBtn = document.createElement("div");
-      audioBtn.classList.add("audio-toggle", "vjs-icon-volume-high");
-      audioBtn.style.color = "white";
-      audioBtn.style.fontSize = "18px";
-      audioBtn.style.padding = "8px";
-      audioBtn.style.cursor = "pointer";
-
-      const fullscreen = player.controlBar.el_.querySelector(
-        ".vjs-fullscreen-control"
-      );
-      fullscreen?.before(audioBtn);
-
-      let isMuted = false;
-      audioBtn.addEventListener("click", () => {
-        isMuted = !isMuted;
-        player.muted(isMuted);
-        audioBtn.className = isMuted
-          ? "audio-toggle vjs-icon-volume-mute"
-          : "audio-toggle vjs-icon-volume-high";
-      });
-
-      function createAutoQualityButton(params) {
-        let button = document.createElement("div");
-        button.id = "auto";
-        button.innerText = `Auto`;
-        button.classList.add("selected");
-        if (params?.class) button.classList.add(params.class);
-        button.addEventListener("click", () => {
-          removeSelected(params);
-          button.classList.add("selected");
-          params.qualities.forEach((q) => q.enabled(true));
-        });
-        return button;
-      }
-
-      function createButtonsQualities(params) {
-        if (document.querySelector(".contentMenu")) return;
-        let contentMenu = document.createElement("div");
-        let menu = document.createElement("div");
-        let icon = document.createElement("div");
-
-        let fullscreen = params.father.querySelector(".vjs-fullscreen-control");
-        contentMenu.appendChild(icon);
-        contentMenu.appendChild(menu);
-        fullscreen.before(contentMenu);
-
-        menu.classList.add("menu");
-        icon.classList.add("icon", "vjs-icon-cog");
-        contentMenu.classList.add("contentMenu");
-
-        const autoButton = createAutoQualityButton(params);
-        menu.appendChild(autoButton);
-
-        params.qualities.sort((a, b) => (a.height > b.height ? 1 : 0));
-
-        params.qualities.forEach((quality) => {
-          const button = document.createElement("div");
-          if (params?.class) button.classList.add(params.class);
-          button.id = `${quality.height}`;
-          button.innerText = `${quality.height}p`;
-          button.addEventListener("click", () => {
-            resetQuality(params);
-            button.classList.add("selected");
-            quality.enabled(true);
-          });
-          menu.appendChild(button);
-        });
-
-        setInterval(() => {
-          const auto = document.querySelector("#auto");
-          const selectedPlaylist = player
-            .tech({ IWillNotUseThisInPlugins: true })
-            .hls.selectPlaylist();
-
-          const resolution = selectedPlaylist?.attributes?.RESOLUTION;
-          const currentHeight = resolution?.height;
-
-          if (auto) {
-            auto.innerHTML = auto.classList.contains("selected")
-              ? `Auto <span class='current'>${currentHeight}p</span>`
-              : "Auto";
-          }
-        }, 1000);
-      }
-
-      function removeSelected(params) {
-        document.querySelector("#auto")?.classList.remove("selected");
-        [...document.querySelectorAll(`.${params.class}`)].forEach((q) => {
-          q.classList.remove("selected");
-        });
-      }
-
-      function resetQuality(params) {
-        removeSelected(params);
-        params.qualities.forEach((quality) => quality.enabled(false));
-      }
-
-      // Cleanup on unmount
-      return () => {
-        if (playerRef.current) {
-          playerRef.current.dispose();
-        }
-      };
-    };
-
-    document.body.appendChild(script);
-
-    return () => {
-      if (playerRef.current) {
-        playerRef.current.dispose();
-      }
-    };
-  }, [videoDetails]);
-
-  return (
-    <div className="container" id="videoContainer">
-      <video
-        width={"400px"}
-        height={"400px"}
-        controls
-        ref={videoRef}
-        // data-setup='{"controlBar": {"volumePanel": {"inline": false}}}'
-        className="video-js vjs-default-skin"
-      />
-    </div>
-  );
+          // getInstance={(art) => console.log(art)}
+        />
+      </div>
+    );
+  }
 };
 
 export default VideoPlayer;

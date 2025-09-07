@@ -3,17 +3,14 @@ import { Youtube, CirclePlus } from "lucide-react";
 import SearchBar from "@components/SearchBar";
 import VideoGrid from "@components/VideoGrid";
 import EmptyState from "@components/EmptyState";
-import { useSelector } from "react-redux";
-import { useVideoList } from "@hooks/index";
-import { useWebSocket } from "@utils/Common.utils";
+import { useVideoListPublicHook } from "@hooks/index";
 
 export const HomePage = () => {
   const [searchQuery, setSearchQuery] = useState("");
-  const [filteredVideos, setFilteredVideos] = useState([]);
-  const [isInitialRender, setIsInitialRender] = useState(true);
+  const { publicVideoList, handleVideoWatch, createChannel } =
+    useVideoListPublicHook();
 
-  const { createChannel, videoHistory } = useVideoList();
-
+  console.log({ publicVideoList });
 
   return (
     <div className="min-h-screen bg-gray-900">
@@ -38,8 +35,12 @@ export const HomePage = () => {
       </header>
 
       <main className="max-w-7xl mx-auto px-4 py-6">
-        {filteredVideos.length > 0 ? (
-          <VideoGrid videos={filteredVideos} />
+        {publicVideoList ? (
+          <VideoGrid
+            playVideo={handleVideoWatch}
+            videos={publicVideoList}
+            // userDetails={userDetails}
+          />
         ) : (
           <EmptyState searchQuery={searchQuery} />
         )}

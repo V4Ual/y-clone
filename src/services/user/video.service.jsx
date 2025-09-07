@@ -26,3 +26,12 @@ export const fetchVideoUpload = async (videoData) => {
     return error.response.data;
   }
 };
+
+export const fetchPublicVideoList = async () => {
+  try {
+    const response = await api.get(`/v1/video/list`);
+    return response.data;
+  } catch (error) {
+    return error.response.data;
+  }
+};

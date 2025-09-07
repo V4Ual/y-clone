@@ -8,3 +8,12 @@ export const fetchUserDetails = async (channelData) => {
     return error.response.data;
   }
 };
+
+export const fetchUserRegister = async (channelData) => {
+  try {
+    const response = await api.post("/v1/user/register", channelData);
+    return response.data;
+  } catch (error) {
+    return error.response.data;
+  }
+};

@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 const VideoCard = ({ video, userDetails, playVideo }) => {
   return (
     <div
+      key={video.video_id}
       onClick={() => playVideo(video.video_id)}
       className="group cursor-pointer transition-transform duration-300 hover:-translate-y-1"
     >
@@ -20,17 +21,19 @@ const VideoCard = ({ video, userDetails, playVideo }) => {
       </div>
 
       <div className="flex gap-3">
-        <div className="flex-shrink-0">
-          <Link to={`/channel/${video.id}`}>
-            <div className="w-9 h-9 rounded-full overflow-hidden ring-2 ring-transparent hover:ring-red-500 transition-all duration-300">
-              <img
-                src={userDetails.channel_image}
-                alt={video.channel_name}
-                className="w-full h-full object-cover"
-              />
-            </div>
-          </Link>
-        </div>
+        {userDetails && (
+          <div className="flex-shrink-0">
+            <Link to={`/channel/${video.id}`}>
+              <div className="w-9 h-9 rounded-full overflow-hidden ring-2 ring-transparent hover:ring-red-500 transition-all duration-300">
+                <img
+                  src={userDetails.channel_image}
+                  alt={video.channel_name}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            </Link>
+          </div>
+        )}
 
         <div className="flex-1 overflow-hidden">
           <h3 className="font-medium text-[15px] leading-tight line-clamp-2 mb-1 text-gray-100">
@@ -44,7 +47,7 @@ const VideoCard = ({ video, userDetails, playVideo }) => {
             >
               {video.channelName}
             </Link>
-            <span>{userDetails.channel_name}</span>
+            {/* <span>{userDetails.channel_name}</span> */}
 
             <div className="flex items-center">
               <span>{formatViews(video.views)}</span>
