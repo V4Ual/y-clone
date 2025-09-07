@@ -3,6 +3,8 @@ import {
   onChangeSignupValidation,
   submitSignupValidation,
 } from "../../validation/SingupValidation";
+import { fetchUserRegister } from "@services/index";
+import { toast } from "react-toastify";
 
 export const useRegistrationHook = () => {
   const [registerData, setRegisterData] = useState({});
@@ -17,11 +19,19 @@ export const useRegistrationHook = () => {
 
     setRegisterData((prev) => ({ ...prev, [name]: value }));
   };
-  const handleOnSubmit = (event) => {
+  const handleOnSubmit = async (event) => {
     const error = submitSignupValidation(registerData);
     setErrorMessage(error);
     if (Object.keys(error).length > 0) {
       return;
+    }
+
+    const response = await fetchUserRegister(registerData);
+
+    if (response.status) {
+      toast.success(response.message);
+    } else {
+      toast.error(response.message);
     }
   };
 

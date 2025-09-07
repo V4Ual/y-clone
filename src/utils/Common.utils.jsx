@@ -9,14 +9,13 @@ export const urlDataGet = () => {
   return new URLSearchParams(location.search);
 };
 
-
 export const useWebSocket = (onMessage) => {
   const userDetails = useSelector((state) => state.user);
   const socketRef = useRef(null);
 
   useEffect(() => {
     if (userDetails?.id && !socketRef.current) {
-      const ws = new WebSocket(`ws://192.168.33.86:3002?id=${userDetails.id}`);
+      const ws = new WebSocket(`ws://10.149.6.86:3004?id=${userDetails.id}`);
       socketRef.current = ws;
 
       ws.onopen = () => {
@@ -24,6 +23,7 @@ export const useWebSocket = (onMessage) => {
       };
 
       ws.onmessage = (event) => {
+        console.log(">>>>>>>>>>>>>>>>>>>>>>>>",event.data);
         if (onMessage) onMessage(event.data);
       };
 

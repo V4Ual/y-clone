@@ -40,7 +40,7 @@ const useLoginHook = () => {
       toast.success(loginResponse.message);
       localStorage.setItem("access_token", loginResponse.data.access_token);
       localStorage.setItem("userDetails", JSON.stringify(loginResponse.data));
-      document.cookie = "refresh_token=" + loginResponse.data.refresh_token;
+      // document.cookie = "refresh_token=" + loginResponse.data.refresh_token;
       navigation("/home");
     } else {
       toast.error(loginResponse.message);

@@ -13,6 +13,7 @@ import {
 import { useVideoList, useVideoUpload } from "@hooks/index";
 import { formatTime, formatViews } from "@utils/formate";
 import { useWebSocket } from "@utils/Common.utils";
+import { Link } from "react-router-dom";
 
 // Types
 
@@ -22,7 +23,7 @@ export const VideoUpload = () => {
   const [description, setDescription] = useState("");
   const [thumbnail, setThumbnail] = useState("");
   const [videoFile, setVideoFile] = useState(null);
-  const [isUploading, setIsUploading] = useState(false);
+  // const [isUploading, setIsUploading] = useState(false);
   const [activeTab, setActiveTab] = useState("details");
   const [processVideo, setProcessVideo] = useState();
 
@@ -39,6 +40,7 @@ export const VideoUpload = () => {
     hanldeDeleteThumbnail,
     handleChangeInputUploadVideo,
     handleSubmitVideo,
+    isUploading,
   } = useVideoUpload();
 
   // Delete a video
@@ -53,7 +55,9 @@ export const VideoUpload = () => {
         <div className="flex items-center justify-between max-w-6xl mx-auto">
           <div className="flex items-center space-x-2">
             <Video className="h-8 w-8 text-red-600" />
-            <h1 className="text-xl font-bold">YourTube Studio</h1>
+            <h1 className="text-xl font-bold">
+              <Link to={"/home"}>YourTube Studio</Link>
+            </h1>
           </div>
           <div className="flex items-center space-x-4">
             <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md flex items-center">

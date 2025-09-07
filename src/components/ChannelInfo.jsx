@@ -3,8 +3,6 @@ import { BadgeCheck } from "lucide-react";
 
 const ChannelInfo = ({ channelInfo, isVerified = false }) => {
   const [isSubscribed, setIsSubscribed] = useState(false);
-  
-  console.log({channelInfo})
 
   return (
     <div className="flex items-start justify-between py-4">

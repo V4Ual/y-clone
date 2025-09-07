@@ -9,6 +9,7 @@ export const ChannelPage = ({ channel }) => {
 
   const { channelVideos, handleVideoWatch } = useVideoList();
 
+  console.log({channelVideos})
   return (
     <div className="min-h-screen bg-gray-900">
       <ChannelHeader channel={userDetails} />

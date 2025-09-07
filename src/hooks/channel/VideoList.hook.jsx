@@ -21,8 +21,8 @@ export const useVideoList = (isAll = false) => {
   }, [isAll]);
 
   const handleVideoWatch = (videoId) => {
-    console.log(videoId);
     navigation(`/watch?v=${videoId}`);
+    window.location.reload()
   };
 
   const createChannel = () => {
@@ -39,5 +39,3 @@ export const useVideoList = (isAll = false) => {
     channelVideos,
   };
 };
-
-

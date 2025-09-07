@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 
 export const useVideoUpload = () => {
   const [videoData, setVideoData] = useState({});
-
+  const [isUploading, setIsUploading] = useState(false);
   const handleChangeInputUploadVideo = (e) => {
     const { name, value, files } = e.target;
 
@@ -39,6 +39,7 @@ export const useVideoUpload = () => {
   };
 
   const handleSubmitVideo = () => {
+    setIsUploading(true);
     const formData = new FormData();
     formData.append("video", videoData.video);
     formData.append("thumbnail", videoData.image);
@@ -49,7 +50,6 @@ export const useVideoUpload = () => {
 
     if (response.status) {
       toast.success(response.message);
-      setVideoData({});
     } else {
       toast.error(response.message);
     }
@@ -60,5 +60,6 @@ export const useVideoUpload = () => {
     videoData,
     handleSubmitVideo,
     hanldeDeleteThumbnail,
+    isUploading,
   };
 };
